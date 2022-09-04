@@ -1,36 +1,58 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AiOutlineClose, AiOutlineMail, AiOutlineMenu } from "react-icons/ai";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { BsPersonLinesFill } from "react-icons/bs";
+import { useRouter } from "next/router";
 
 function Navbar() {
   const [nav, setNav] = useState(false);
+  const [shadow, setShadow] = useState(false);
+  const [isTransparent, setIsTransparent] = useState(false);
+  const router = useRouter();
+  const pagesForTransparentNavBar = ["/property", "/crypto", "/netflix", "/twitch"];
 
   const handleNav = () => {
     setNav(!nav);
   };
 
+  useEffect(() => {
+    pagesForTransparentNavBar.includes(router.pathname) ? setIsTransparent(true) : setIsTransparent(false);
+  }, [router]);
+
+  useEffect(() => {
+    const handleShadow = () => {
+      if (window.scrollY >= 90) {
+        setShadow(true);
+      } else {
+        setShadow(false);
+      }
+    };
+    window.addEventListener("scroll", handleShadow);
+  }, []);
+
   return (
-    <div className="fixed w-full h-20 shadow-xl bg-[#ecf0f3]">
+    <div className={`fixed w-full h-20  z-[100] ${shadow ? "shadow-xl" : ""} ${isTransparent ? "text-white" : "bg-[#ecf0f3]"}`}>
       <div className="flex items-center justify-between w-full h-full px-2 2xl:px-16">
-        <Image src="/../public/assets/navLogo.png" alt="" width="125" height="50" />
+        <Link href="/">
+          <Image src="/../public/assets/navLogo.png" alt="" width="125" height="50" />
+        </Link>
         <div>
           <ul className="hidden md:flex">
             <Link href="/">
               <li className="ml-10 text-sm uppercase hover:border-b">home</li>
             </Link>
-            <Link href="/">
+            <Link href="/#about">
               <li className="ml-10 text-sm uppercase hover:border-b">About</li>
             </Link>
-            <Link href="/">
+            <Link href="/#skills">
               <li className="ml-10 text-sm uppercase hover:border-b">Skills</li>
             </Link>
-            <Link href="/">
+            <Link href="/#projects">
               <li className="ml-10 text-sm uppercase hover:border-b">Projects</li>
             </Link>
-            <Link href="/">
+            <Link href="/#contact">
               <li className="ml-10 text-sm uppercase hover:border-b">Contact</li>
             </Link>
           </ul>
@@ -62,19 +84,29 @@ function Navbar() {
           <div className="flex flex-col py-4">
             <ul className="uppercase">
               <Link href="/">
-                <li className="py-4 text-sm">Home</li>
+                <li onClick={() => setNav(false)} className="py-4 text-sm">
+                  Home
+                </li>
               </Link>
-              <Link href="/">
-                <li className="py-4 text-sm">About</li>
+              <Link href="/#about">
+                <li onClick={() => setNav(false)} className="py-4 text-sm">
+                  About
+                </li>
               </Link>
-              <Link href="/">
-                <li className="py-4 text-sm">Skills</li>
+              <Link href="/#skills">
+                <li onClick={() => setNav(false)} className="py-4 text-sm">
+                  Skills
+                </li>
               </Link>
-              <Link href="/">
-                <li className="py-4 text-sm">Projects</li>
+              <Link href="/#projects">
+                <li onClick={() => setNav(false)} className="py-4 text-sm">
+                  Projects
+                </li>
               </Link>
-              <Link href="/">
-                <li className="py-4 text-sm">Contact</li>
+              <Link href="/#contact">
+                <li onClick={() => setNav(false)} className="py-4 text-sm">
+                  Contact
+                </li>
               </Link>
             </ul>
             <div className="pt-40">
